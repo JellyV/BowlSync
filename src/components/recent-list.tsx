@@ -1,15 +1,22 @@
 import { FeedingRow } from "@/components/feeding-row";
 
+interface Member {
+  id: string;
+  displayName: string;
+}
+
 interface RecentListProps {
   rows: Array<{
     id: string;
     fedAt: Date;
     fedByName: string | null;
+    fedById: string | null;
   }>;
   justFed: string | null;
+  members: Member[];
 }
 
-export function RecentList({ rows, justFed }: RecentListProps) {
+export function RecentList({ rows, justFed, members }: RecentListProps) {
   return (
     <section className="w-full max-w-sm mx-auto space-y-3">
       <h2 className="text-xs font-semibold font-mono tracking-widest uppercase text-(--foreground)">
@@ -23,7 +30,7 @@ export function RecentList({ rows, justFed }: RecentListProps) {
       ) : (
         <div className="space-y-1.5">
           {rows.map((row) => (
-            <FeedingRow key={row.id} row={row} justFed={justFed} />
+            <FeedingRow key={row.id} row={row} justFed={justFed} members={members} />
           ))}
         </div>
       )}

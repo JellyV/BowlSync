@@ -18,13 +18,19 @@ export default async function StatusPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const justFed = sp.justFed ?? null;
 
-  const rows = await db
-    .select({ id: feedings.id, fedAt: feedings.fedAt, fedByName: householdMembers.displayName })
-    .from(feedings)
-    .leftJoin(householdMembers, eq(householdMembers.id, feedings.fedBy))
-    .where(eq(feedings.householdId, ctx.household.id))
-    .orderBy(desc(feedings.fedAt))
-    .limit(5);
+  const [rows, members] = await Promise.all([
+    db
+      .select({ id: feedings.id, fedAt: feedings.fedAt, fedByName: householdMembers.displayName, fedById: feedings.fedBy })
+      .from(feedings)
+      .leftJoin(householdMembers, eq(householdMembers.id, feedings.fedBy))
+      .where(eq(feedings.householdId, ctx.household.id))
+      .orderBy(desc(feedings.fedAt))
+      .limit(5),
+    db
+      .select({ id: householdMembers.id, displayName: householdMembers.displayName })
+      .from(householdMembers)
+      .where(eq(householdMembers.householdId, ctx.household.id)),
+  ]);
 
   const lastFedAt = rows[0]?.fedAt ?? null;
   const lastFedByName = rows[0]?.fedByName ?? null;
@@ -48,7 +54,7 @@ export default async function StatusPage({ searchParams }: PageProps) {
 
       <ClearJustFed />
 
-      <RecentList rows={rows} justFed={justFed} />
+      <RecentList rows={rows} justFed={justFed} members={members} />
     </main>
   );
 }

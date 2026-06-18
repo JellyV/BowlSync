@@ -1,5 +1,6 @@
 "use server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { feedings, householdMembers } from "@/db/schema";
@@ -46,4 +47,23 @@ export async function markFed(): Promise<void> {
     redirect(`/?justFed=${result.id}`);
   }
   redirect("/fed");
+}
+
+export async function editFeeding(input: { id: string; fedById?: string | null; fedAt?: Date }): Promise<void> {
+  const ctx = await getUserContext();
+  if (ctx.status !== "ready") redirect("/onboarding");
+  await db.update(feedings)
+    .set({
+      ...(input.fedById !== undefined ? { fedBy: input.fedById } : {}),
+      ...(input.fedAt ? { fedAt: input.fedAt } : {}),
+    })
+    .where(and(eq(feedings.id, input.id), eq(feedings.householdId, ctx.household.id)));
+  revalidatePath("/");
+}
+
+export async function deleteFeeding(id: string): Promise<void> {
+  const ctx = await getUserContext();
+  if (ctx.status !== "ready") redirect("/onboarding");
+  await db.delete(feedings).where(and(eq(feedings.id, id), eq(feedings.householdId, ctx.household.id)));
+  revalidatePath("/");
 }
