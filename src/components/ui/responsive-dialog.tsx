@@ -6,10 +6,18 @@
  * Renders a centered Dialog on desktop (≥640px) and a bottom Drawer on mobile.
  * Children are written ONCE — no content duplication in the caller.
  *
- * Hydration note: useIsDesktop() starts false (SSR / first paint) then
- * corrects in useEffect. Because these components only render when `open`
- * is true (a user-triggered action that happens after hydration), the
- * brief false→true switch is invisible and produces no hydration mismatch.
+ * Single source of truth: the Root computes `isDesktop` once and shares it via
+ * React Context. Every subcomponent reads the SAME value, so the Root's
+ * Dialog/Drawer choice and each descendant's choice can never disagree within a
+ * render. (Deriving `isDesktop` independently per component lets the Root render
+ * a Dialog while a child renders a Drawer subtree, which throws
+ * "DialogPortal must be used within Dialog" because vaul's Drawer portal then
+ * has no Drawer.Root ancestor.)
+ *
+ * Hydration note: `isDesktop` starts false (SSR / first paint) then corrects in
+ * useEffect. Because these components only render their content after `open`
+ * becomes true (a user action, post-hydration), the brief false→true switch is
+ * invisible and produces no hydration mismatch.
  */
 
 import * as React from "react";
@@ -33,6 +41,13 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 
+// Shared breakpoint value. Defaults to false (mobile) — matches SSR and is
+// overridden by the Root's provider in every real usage.
+const ResponsiveDialogContext = React.createContext(false);
+function useResponsiveIsDesktop() {
+  return React.useContext(ResponsiveDialogContext);
+}
+
 // ── Root ───────────────────────────────────────────────────────────────────
 
 interface ResponsiveDialogProps {
@@ -48,18 +63,18 @@ function ResponsiveDialog({
 }: ResponsiveDialogProps) {
   const isDesktop = useIsDesktop();
 
-  if (isDesktop) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        {children}
-      </Dialog>
-    );
-  }
-
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      {children}
-    </Drawer>
+    <ResponsiveDialogContext.Provider value={isDesktop}>
+      {isDesktop ? (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+          {children}
+        </Dialog>
+      ) : (
+        <Drawer open={open} onOpenChange={onOpenChange}>
+          {children}
+        </Drawer>
+      )}
+    </ResponsiveDialogContext.Provider>
   );
 }
 
@@ -70,7 +85,7 @@ function ResponsiveDialogContent({
   children,
   ...props
 }: React.ComponentProps<"div"> & { showCloseButton?: boolean }) {
-  const isDesktop = useIsDesktop();
+  const isDesktop = useResponsiveIsDesktop();
 
   if (isDesktop) {
     return (
@@ -93,7 +108,7 @@ function ResponsiveDialogHeader({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const isDesktop = useIsDesktop();
+  const isDesktop = useResponsiveIsDesktop();
 
   if (isDesktop) {
     return <DialogHeader className={className} {...props} />;
@@ -107,7 +122,7 @@ function ResponsiveDialogTitle({
   className,
   ...props
 }: React.ComponentProps<"h2">) {
-  const isDesktop = useIsDesktop();
+  const isDesktop = useResponsiveIsDesktop();
 
   if (isDesktop) {
     return <DialogTitle className={className} {...(props as React.ComponentProps<typeof DialogTitle>)} />;
@@ -121,7 +136,7 @@ function ResponsiveDialogDescription({
   className,
   ...props
 }: React.ComponentProps<"p">) {
-  const isDesktop = useIsDesktop();
+  const isDesktop = useResponsiveIsDesktop();
 
   if (isDesktop) {
     return <DialogDescription className={className} {...(props as React.ComponentProps<typeof DialogDescription>)} />;
@@ -135,7 +150,7 @@ function ResponsiveDialogFooter({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const isDesktop = useIsDesktop();
+  const isDesktop = useResponsiveIsDesktop();
 
   if (isDesktop) {
     return <DialogFooter className={className} {...props} />;
@@ -149,7 +164,7 @@ function ResponsiveDialogClose({
   className,
   ...props
 }: React.ComponentProps<"button">) {
-  const isDesktop = useIsDesktop();
+  const isDesktop = useResponsiveIsDesktop();
 
   if (isDesktop) {
     return <DialogClose className={className} {...(props as React.ComponentProps<typeof DialogClose>)} />;
