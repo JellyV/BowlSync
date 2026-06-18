@@ -339,7 +339,75 @@ triggers the exact same verified behavior.
 - Billing / subscriptions / premium tiers.
 - Feeding-schedule / "next expected meal" prediction.
 
-## 14. Suggested build order
+## 14. UI / visual direction ("default theme")
+
+> The app is a **general** dog-feeding tracker, not Nacho-specific. The pet name comes from the
+> `pets` table (data); all copy is generic ("your dog," "last fed"). The palette below is just the
+> shipped **default theme**, fully swappable (see §14.4). Nothing in code references "Nacho" or
+> "heeler".
+
+### 14.1 Signature element: the Bowl Gauge
+
+A single large **circular** hero on the status page that is three things at once: the **bowl**, a
+**time-since-fed readout** ("2h ago" centered, absolute time in mono below), and the **tap target**
+for the in-app "Mark fed" action. Grounded in the subject's real round objects (bowl, 25mm NFC tag,
+clock) and functional rather than decorative — it replaces the generic big-number-with-label hero.
+
+### 14.2 Ambient status (the one deliberate risk)
+
+The Bowl Gauge + a subtle page tint **shift color by elapsed time since the last feeding**: `fresh`
+when just fed → drifting toward `stale` as hours pass. This makes the status glanceable from across a
+room (color answers "fed?" before you read). **Color shift only — no depleting-fill animation**
+(avoids implying a feeding cycle). This encodes elapsed time *visually*; it is **not** the cut
+scheduling feature and predicts nothing.
+
+### 14.3 Type
+
+| Role | Face | Use |
+|---|---|---|
+| Display | **Bricolage Grotesque** | the big "2h ago", headlines — characterful, warm, modern |
+| Body | **Hanken Grotesk** | UI text — clean, friendly, neutral |
+| Mono | **Space Mono** | timestamps & feeding-log rows — reinforces the "log" data feel |
+
+### 14.4 Color & theming (swappable)
+
+Colors live as **CSS variables in one place** (`globals.css`) with **semantic names**, wired into the
+Tailwind theme — the standard shadcn/ui pattern. Re-skinning the whole app = editing that one token
+block. Default values (inspired by a blue-merle heeler coat; names kept neutral):
+
+| Semantic token | Default hex | Role |
+|---|---|---|
+| `--background` | `#ECEEEA` | cool ceramic background |
+| `--foreground` / `--ink` | `#1C2326` / `#3B4A52` | text & headlines |
+| `--accent` | `#D7B27D` (wheat) | highlights, the `?justFed` row badge |
+| `--status-fresh` | `#7A9A6E` (sage) | recently fed |
+| `--status-stale` | `#CC7A52` (clay) | a while ago / attention |
+
+### 14.5 Layout (phone-first, single column)
+
+```
+┌───────────────────────────┐
+│  BowlSync         •Alex    │  tiny header: app + who's signed in
+│        ╭─────────╮         │
+│      │   2h ago    │       │  BOWL GAUGE (color: fresh→stale)
+│      │  fed by Alex │      │  tap = Mark fed
+│        ╰─────────╯         │
+│  RECENT                   │
+│  ▸ 11:15a  Alex   [just]  │  mono times; tap row = edit
+│  ▸  7:40a  Sam            │
+│      View all history →    │
+└───────────────────────────┘
+```
+
+The `?justFed` row gets the `--accent` highlight + "just" badge; everything else stays quiet. The
+Bowl Gauge is the single bold element; the recent list is disciplined mono rows.
+
+### 14.6 Quality floor
+
+Responsive to mobile (it *is* a phone app), visible keyboard focus, `prefers-reduced-motion`
+respected (the ambient color shift is gentle / disabled under reduced motion).
+
+## 15. Suggested build order
 
 1. Scaffold Next.js + shadcn/ui; connect Supabase (pooler); set up auth.
 2. Drizzle schema (§7.3) + migrations + RLS enablement (deny-by-default, §7.2).
