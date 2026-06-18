@@ -52,6 +52,19 @@ export async function markFed(): Promise<void> {
 export async function editFeeding(input: { id: string; fedById?: string | null; fedAt?: Date }): Promise<void> {
   const ctx = await getUserContext();
   if (ctx.status !== "ready") redirect("/onboarding");
+
+  // Validate that fedById belongs to the caller's household before writing.
+  // fedById === null (clearing attribution) is always permitted.
+  if (input.fedById !== undefined && input.fedById !== null) {
+    const member = await db.query.householdMembers.findFirst({
+      where: and(
+        eq(householdMembers.id, input.fedById),
+        eq(householdMembers.householdId, ctx.household.id),
+      ),
+    });
+    if (!member) throw new Error("Invalid member for this household");
+  }
+
   await db.update(feedings)
     .set({
       ...(input.fedById !== undefined ? { fedBy: input.fedById } : {}),

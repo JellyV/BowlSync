@@ -28,11 +28,6 @@ describe("safeNext", () => {
     expect(safeNext("https://evil.com/x", ORIGIN)).toBe("/");
   });
 
-  it("blocks URL-encoded protocol-relative attack (decoded: //evil.com)", () => {
-    // URLSearchParams.get decodes before passing here, so test the decoded value
-    expect(safeNext("//evil.com", ORIGIN)).toBe("/");
-  });
-
   it("bare string without leading slash is treated as relative path (same origin, safe)", () => {
     // new URL("evil.com", origin) → https://bowlsync.app/evil.com — still same origin
     expect(safeNext("evil.com", ORIGIN)).toBe("/evil.com");

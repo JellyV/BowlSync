@@ -13,8 +13,8 @@ export default async function FedPage() {
   // Within 30-min window: show confirm prompt — no write on this render.
   const { minutesAgo, fedByName } = result;
 
-  // Need pet name for copy. getUserContext() is already cached by the request,
-  // so this is a cheap second call (same supabase + db session).
+  // Need pet name for copy. getUserContext() is wrapped with React.cache(),
+  // so this second call is deduped — no extra Supabase or DB round-trips.
   const ctx = await getUserContext();
   const petName = ctx.status === "ready" ? ctx.pet.name : "Your pet";
 

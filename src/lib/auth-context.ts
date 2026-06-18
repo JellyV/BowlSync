@@ -1,10 +1,11 @@
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { householdMembers, households, pets } from "@/db/schema";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-export async function getUserContext() {
+export const getUserContext = cache(async function getUserContext() {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
@@ -21,4 +22,4 @@ export async function getUserContext() {
     where: eq(pets.householdId, member.householdId),
   });
   return { userId: user.id, status: "ready" as const, member, household: household!, pet: pet! };
-}
+});
