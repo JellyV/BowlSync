@@ -1,46 +1,35 @@
 import { redirect } from "next/navigation";
-import { and, desc, eq } from "drizzle-orm";
-import { db } from "@/db";
-import { feedings, householdMembers } from "@/db/schema";
 import { getUserContext } from "@/lib/auth-context";
-import { evaluateGuard } from "@/lib/duplicate-guard";
-import { insertFeeding, confirmLogFeeding } from "@/actions/feedings";
+import { logWithGuard, confirmLogFeeding } from "@/actions/feedings";
 import { formatRelative } from "@/lib/time";
 
 export default async function FedPage() {
-  const ctx = await getUserContext();
-  if (ctx.status !== "ready") redirect("/onboarding");
+  const result = await logWithGuard();
 
-  const last = await db
-    .select({ fedAt: feedings.fedAt, fedByName: householdMembers.displayName })
-    .from(feedings)
-    .leftJoin(householdMembers, eq(householdMembers.id, feedings.fedBy))
-    .where(and(eq(feedings.householdId, ctx.household.id), eq(feedings.petId, ctx.pet.id)))
-    .orderBy(desc(feedings.fedAt))
-    .limit(1);
-
-  const decision = evaluateGuard(last[0] ?? null, new Date());
-
-  if (decision.action === "log") {
-    const id = await insertFeeding({
-      householdId: ctx.household.id,
-      petId: ctx.pet.id,
-      memberId: ctx.member.id,
-    });
-    redirect(`/?justFed=${id}`);
+  if (result.outcome === "logged") {
+    redirect(`/?justFed=${result.id}`);
   }
 
   // Within 30-min window: show confirm prompt — no write on this render.
+  const { minutesAgo, fedByName } = result;
+
+  // Need pet name for copy. getUserContext() is already cached by the request,
+  // so this is a cheap second call (same supabase + db session).
+  const ctx = await getUserContext();
+  const petName = ctx.status === "ready" ? ctx.pet.name : "Your pet";
+
+  const relativeTime = minutesAgo < 1 ? "just now" : minutesAgo < 60 ? `${minutesAgo} min ago` : `${Math.floor(minutesAgo / 60)}h ago`;
+
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 bg-[var(--background)]">
-      <div className="w-full max-w-sm space-y-6 rounded-xl border border-[var(--foreground)]/20 bg-[var(--background)] p-8 text-center">
+    <main className="flex min-h-screen items-center justify-center px-4 bg-(--background)">
+      <div className="w-full max-w-sm space-y-6 rounded-xl border border-(--foreground)/20 bg-(--background) p-8 text-center">
         <div className="space-y-2">
-          <h1 className="text-xl font-[family-name:var(--font-display)] font-semibold text-[var(--ink)]">
+          <h1 className="text-xl font-(family-name:--font-display) font-semibold text-(--ink)">
             Already fed?
           </h1>
-          <p className="text-sm text-[var(--foreground)]">
-            {ctx.pet.name} was fed {formatRelative(last[0].fedAt)} by{" "}
-            {decision.fedByName ?? "someone"}.
+          <p className="text-sm text-(--foreground)">
+            {petName} was fed {relativeTime} by{" "}
+            {fedByName ?? "someone"}.
           </p>
         </div>
 
@@ -48,10 +37,10 @@ export default async function FedPage() {
           <button
             type="submit"
             className="
-              w-full rounded-lg bg-[var(--ink)] px-4 py-2.5
-              text-sm font-medium text-[var(--background)]
+              w-full rounded-lg bg-(--ink) px-4 py-2.5
+              text-sm font-medium text-(--background)
               hover:opacity-90 active:opacity-80
-              focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]
+              focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)
               transition-opacity
             "
           >
@@ -62,9 +51,9 @@ export default async function FedPage() {
         <a
           href="/"
           className="
-            block text-sm text-[var(--foreground)] underline underline-offset-2
-            hover:text-[var(--ink)]
-            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]
+            block text-sm text-(--foreground) underline underline-offset-2
+            hover:text-(--ink)
+            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)
             transition-colors
           "
         >
