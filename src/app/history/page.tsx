@@ -5,6 +5,7 @@ import { feedings, householdMembers } from "@/db/schema";
 import { getUserContext } from "@/lib/auth-context";
 import { FeedingRow } from "@/components/feeding-row";
 import { HistoryFilters } from "@/components/history-filters";
+import { BackLink } from "@/components/back-link";
 import { Suspense } from "react";
 
 interface PageProps {
@@ -73,6 +74,7 @@ export default async function HistoryPage({ searchParams }: PageProps) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start gap-8 px-4 py-12 bg-(--background)">
+      <BackLink href="/" label="Back to home" />
       <header className="w-full max-w-sm">
         <h1 className="text-2xl font-bold font-(family-name:--font-display) text-(--ink) text-center">
           History

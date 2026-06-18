@@ -133,5 +133,6 @@
   }
   html {
     @apply font-sans;
+    font-size: 106.25%; /* 17px base (+6%) — scales all rem-based sizes proportionally */
   }
 }

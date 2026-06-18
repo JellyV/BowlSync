@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getUserContext } from "@/lib/auth-context";
 import { createHousehold } from "@/actions/household";
 import { JoinHouseholdForm } from "@/components/JoinHouseholdForm";
+import { BackLink } from "@/components/back-link";
 
 async function createAction(formData: FormData) {
   "use server";
@@ -17,6 +18,7 @@ export default async function OnboardingPage() {
 
   return (
     <main className="flex min-h-screen items-start justify-center px-4 py-16 bg-[var(--background)]">
+      <BackLink href="/login" label="Back to sign in" />
       <div className="w-full max-w-md space-y-8">
         <div className="space-y-1 text-center">
           <h1 className="text-2xl font-[family-name:var(--font-display)] font-semibold text-[var(--ink)]">

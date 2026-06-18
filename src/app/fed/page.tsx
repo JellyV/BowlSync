@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getUserContext } from "@/lib/auth-context";
 import { logWithGuard, confirmLogFeeding } from "@/actions/feedings";
 import { formatRelative } from "@/lib/time";
+import { BackLink } from "@/components/back-link";
 
 export default async function FedPage() {
   const result = await logWithGuard();
@@ -22,10 +23,11 @@ export default async function FedPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 bg-(--background)">
+      <BackLink href="/" label="Back to home" />
       <div className="w-full max-w-sm space-y-6 rounded-xl border border-(--foreground)/20 bg-(--background) p-8 text-center">
         <div className="space-y-2">
           <h1 className="text-xl font-(family-name:--font-display) font-semibold text-(--ink)">
-            Already fed?
+            Just fed — log anyway?
           </h1>
           <p className="text-sm text-(--foreground)">
             {petName} was fed {relativeTime} by{" "}
