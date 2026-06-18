@@ -40,7 +40,7 @@ No feeding schedule, no reminders, no predictions, no native app, no billing. Se
 | Hosting | **Vercel** | Zero-config Next.js deploys, built-in cron, good free tier. |
 | Database + Auth | **Supabase** (hosted Postgres + Supabase Auth) | Managed Postgres, magic-link email auth, Google OAuth — all in one project. |
 | ORM | **Drizzle** | Code-first schema (TypeScript → SQL migration files), typed queries, works cleanly with the Supabase connection pooler. |
-| UI components | **shadcn/ui + Tailwind v4** | Accessible components with no runtime overhead; swappable theme tokens. |
+| UI components | **shadcn/ui (Base UI edition) + Tailwind v4** | Accessible components with no runtime overhead; swappable theme tokens. |
 
 ### The tradeoff story
 
@@ -94,13 +94,21 @@ The two connection strings differ by port: **6543** for the transaction pooler (
 
 > **Security note:** `NEXT_PUBLIC_SUPABASE_ANON_KEY` is intentionally public. It is the Supabase "publishable" key. The values that must stay secret are `DATABASE_URL`, `MIGRATION_DATABASE_URL`, and (if you use it) `SUPABASE_SERVICE_ROLE_KEY`. Never commit these.
 
-### 3. Run migrations
+### 3. Run database migrations
 
 ```bash
 npm run db:migrate
 ```
 
-This creates four tables (`households`, `household_members`, `pets`, `feedings`) and enables RLS deny-by-default.
+This creates four tables (`households`, `household_members`, `pets`, `feedings`).
+
+Then, enable Row Level Security:
+
+```bash
+npm run db:apply-rls
+```
+
+This enables deny-by-default RLS on all four tables and adds the `auth.users` foreign key. It runs the SQL in `drizzle/0001_enable_rls.sql` as a one-time step (not tracked in Drizzle's migration journal).
 
 ### 4. Start the dev server
 
