@@ -33,6 +33,10 @@ const statements = stripped
   .filter((s) => s.length > 0)
   .map((s) => s + ";");
 
+if (!process.env.MIGRATION_DATABASE_URL) {
+  throw new Error("MIGRATION_DATABASE_URL is not set. Ensure .env.local exists and contains it.");
+}
+
 const sql = postgres(process.env.MIGRATION_DATABASE_URL!, { max: 1 });
 
 (async () => {

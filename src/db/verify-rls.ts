@@ -2,6 +2,10 @@ import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 import postgres from "postgres";
 
+if (!process.env.MIGRATION_DATABASE_URL) {
+  throw new Error("MIGRATION_DATABASE_URL is not set. Ensure .env.local exists and contains it.");
+}
+
 const sql = postgres(process.env.MIGRATION_DATABASE_URL!, { max: 1 });
 
 (async () => {
