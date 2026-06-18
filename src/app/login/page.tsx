@@ -91,7 +91,7 @@ function LoginForm() {
           disabled={state === "sending"}
           placeholder="you@example.com"
           className="
-            w-full rounded-lg border border-[var(--foreground)]/30 bg-white/60
+            w-full rounded-lg border border-[var(--foreground)]/30 bg-(--background)/60
             px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--foreground)]/50
             focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent
             disabled:opacity-50 disabled:cursor-not-allowed
@@ -133,9 +133,9 @@ function LoginForm() {
         disabled={state === "sending"}
         className="
           w-full flex items-center justify-center gap-2 rounded-lg
-          border border-[var(--foreground)]/30 bg-white/60 px-4 py-2.5
+          border border-[var(--foreground)]/30 bg-(--background)/60 px-4 py-2.5
           text-sm font-medium text-[var(--ink)]
-          hover:bg-white/80 active:bg-white/50
+          hover:bg-(--background)/80 active:bg-(--background)/50
           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]
           disabled:opacity-40 disabled:cursor-not-allowed
           transition-colors
