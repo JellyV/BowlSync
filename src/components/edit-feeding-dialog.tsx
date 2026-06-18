@@ -3,11 +3,11 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from "@/components/ui/responsive-dialog";
 import { editFeeding, deleteFeeding } from "@/actions/feedings";
 
 interface Member {
@@ -83,11 +83,11 @@ export function EditFeedingDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-(--background) text-(--ink)">
-        <DialogHeader>
-          <DialogTitle className="text-(--ink)">Edit Feeding</DialogTitle>
-        </DialogHeader>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="bg-(--background) text-(--ink)">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle className="text-(--ink)">Edit Feeding</ResponsiveDialogTitle>
+        </ResponsiveDialogHeader>
 
         <div className="flex flex-col gap-4 mt-2">
           {/* Who fed */}
@@ -198,8 +198,8 @@ export function EditFeedingDialog({
             </button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }
 
