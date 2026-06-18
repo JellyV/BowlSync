@@ -3,13 +3,15 @@ import { getUserContext } from "@/lib/auth-context";
 import { createHousehold } from "@/actions/household";
 import { JoinHouseholdForm } from "@/components/JoinHouseholdForm";
 import { BackLink } from "@/components/back-link";
+import { PetTypeSelect } from "@/components/pet-type-select";
 
 async function createAction(formData: FormData) {
   "use server";
   const householdName = formData.get("householdName") as string;
   const displayName = formData.get("displayName") as string;
   const petName = formData.get("petName") as string;
-  await createHousehold({ householdName, displayName, petName });
+  const petType = (formData.get("petType") as string) ?? "dog";
+  await createHousehold({ householdName, displayName, petName, petType });
 }
 
 export default async function OnboardingPage() {
@@ -69,7 +71,7 @@ export default async function OnboardingPage() {
                 htmlFor="create-petName"
                 className="block text-sm font-medium text-[var(--ink)]"
               >
-                Your dog&apos;s name
+                Your pet&apos;s name
               </label>
               <input
                 id="create-petName"
@@ -77,7 +79,7 @@ export default async function OnboardingPage() {
                 type="text"
                 autoComplete="off"
                 required
-                placeholder="What's your dog's name?"
+                placeholder="What's your pet's name?"
                 className="
                   w-full rounded-lg border border-[var(--foreground)]/30 bg-[var(--background)]/60
                   px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--foreground)]/50
@@ -86,6 +88,8 @@ export default async function OnboardingPage() {
                 "
               />
             </div>
+
+            <PetTypeSelect />
 
             <div className="space-y-1">
               <label

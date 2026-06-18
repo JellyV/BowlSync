@@ -1,14 +1,16 @@
 import { markFed } from "@/actions/feedings";
 import { minutesBetween, formatRelative, formatAbsolute } from "@/lib/time";
 import { freshnessFromElapsed, freshnessColorVar } from "@/lib/status";
+import { getAnimal } from "@/lib/animals";
 
 interface BowlGaugeProps {
   lastFedAt: Date | null;
   lastFedByName: string | null;
   petName: string;
+  petType?: string;
 }
 
-export function BowlGauge({ lastFedAt, lastFedByName, petName }: BowlGaugeProps) {
+export function BowlGauge({ lastFedAt, lastFedByName, petName, petType }: BowlGaugeProps) {
   const now = new Date();
   const minutes = lastFedAt ? minutesBetween(lastFedAt, now) : Infinity;
   const freshness = freshnessFromElapsed(Number.isFinite(minutes) ? minutes : 999);
@@ -49,6 +51,12 @@ export function BowlGauge({ lastFedAt, lastFedByName, petName }: BowlGaugeProps)
         )}
 
         <span className="mt-3 text-xs font-medium text-(--background)/70 uppercase tracking-widest">
+          {petName}{getAnimal(petType)?.emoji ? (
+            <span className="emoji ml-1">{getAnimal(petType)!.emoji}</span>
+          ) : null}
+        </span>
+
+        <span className="mt-1 text-xs font-medium text-(--background)/50 uppercase tracking-widest">
           Tap to log
         </span>
       </button>

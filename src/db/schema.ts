@@ -20,6 +20,7 @@ export const pets = pgTable("pets", {
   id: uuid("id").primaryKey().defaultRandom(),
   householdId: uuid("household_id").notNull().references(() => households.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
+  type: text("type"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

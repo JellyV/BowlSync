@@ -8,6 +8,13 @@
       "when": 1781769614027,
       "tag": "0000_right_clint_barton",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781805346496,
+      "tag": "0002_add_pet_type",
+      "breakpoints": true
     }
   ]
 }

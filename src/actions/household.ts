@@ -13,7 +13,7 @@ async function requireUserId() {
   return user.id;
 }
 
-export async function createHousehold(input: { householdName: string; displayName: string; petName: string }) {
+export async function createHousehold(input: { householdName: string; displayName: string; petName: string; petType: string }) {
   const userId = await requireUserId();
 
   // Guard: if the user already belongs to a household, they shouldn't be on onboarding.
@@ -28,7 +28,7 @@ export async function createHousehold(input: { householdName: string; displayNam
       .returning();
     await tx.insert(householdMembers)
       .values({ householdId: household.id, userId, displayName: input.displayName });
-    await tx.insert(pets).values({ householdId: household.id, name: input.petName });
+    await tx.insert(pets).values({ householdId: household.id, name: input.petName, type: input.petType });
   });
 
   // redirect() throws a special Next.js error; it must be outside the transaction

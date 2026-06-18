@@ -136,3 +136,9 @@
     font-size: 106.25%; /* 17px base (+6%) — scales all rem-based sizes proportionally */
   }
 }
+
+/* Cross-platform emoji rendering — wraps emoji in Noto Color Emoji webfont */
+.emoji {
+  font-family: var(--font-emoji), "Noto Color Emoji", sans-serif;
+  line-height: 1;
+}
