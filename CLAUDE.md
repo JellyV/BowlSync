@@ -11,13 +11,18 @@ it forces a permission prompt that no allow rule, hook, or permission mode
 **Bash writes to `.git/` are NOT blocked.** So:
 
 - **Never** use the Edit/Write/MultiEdit tool on any file under `.git/sdd/`.
-- Update the progress ledger with a bash append instead, e.g.:
+- Use a **literal relative path** (`.git/sdd/…`), NOT a
+  `$(git rev-parse --git-path sdd)` command substitution — Claude Code
+  prompts on command-substitution even when the inner command is
+  allow-listed. This repo always runs from its root, so the literal path is
+  safe.
+- Update the progress ledger with a bash append, e.g.:
 
   ```bash
   echo "Task N: complete (commits <base7>..<head7>, review clean)" \
-    >> "$(git rev-parse --git-path sdd)/progress.md"
+    >> .git/sdd/progress.md
   ```
 
 - To create/overwrite a file under `.git/sdd/`, write it via bash
-  (`cat > … <<'EOF'`, `printf`, redirection) — not the Write tool.
+  (`cat > .git/sdd/file <<'EOF'`, `printf`, redirection) — not the Write tool.
 - Reading those files with the Read tool or `cat` is fine (reads aren't blocked).

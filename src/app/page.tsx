@@ -5,6 +5,7 @@ import { feedings, householdMembers } from "@/db/schema";
 import { getUserContext } from "@/lib/auth-context";
 import { BowlGauge } from "@/components/bowl-gauge";
 import { RecentList } from "@/components/recent-list";
+import { ClearJustFed } from "@/components/clear-just-fed";
 
 interface PageProps {
   searchParams: Promise<{ justFed?: string }>;
@@ -44,6 +45,8 @@ export default async function StatusPage({ searchParams }: PageProps) {
         lastFedByName={lastFedByName}
         petName={ctx.pet.name}
       />
+
+      <ClearJustFed />
 
       <RecentList rows={rows} justFed={justFed} />
     </main>
