@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk, Space_Mono, Geist } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-display" });
 const body = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-body" });
@@ -19,7 +22,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", display.variable, body.variable, mono.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col font-(family-name:--font-body)">{children}</body>
     </html>
