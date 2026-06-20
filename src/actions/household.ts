@@ -13,7 +13,7 @@ async function requireUserId() {
   return user.id;
 }
 
-export async function createHousehold(input: { householdName: string; displayName: string; petName: string; petType: string }) {
+export async function createHousehold(input: { displayName: string; petName: string; petType: string }) {
   const userId = await requireUserId();
 
   // Guard: if the user already belongs to a household, they shouldn't be on onboarding.
@@ -24,7 +24,7 @@ export async function createHousehold(input: { householdName: string; displayNam
 
   await db.transaction(async (tx) => {
     const [household] = await tx.insert(households)
-      .values({ name: input.householdName, inviteCode: generateInviteCode() })
+      .values({ name: `${input.petName}'s Household`, inviteCode: generateInviteCode() })
       .returning();
     await tx.insert(householdMembers)
       .values({ householdId: household.id, userId, displayName: input.displayName });

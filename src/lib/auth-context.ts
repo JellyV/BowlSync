@@ -15,11 +15,10 @@ export const getUserContext = cache(async function getUserContext() {
   });
   if (!member) return { userId: user.id, status: "no-membership" as const };
 
-  const household = await db.query.households.findFirst({
-    where: eq(households.id, member.householdId),
-  });
-  const pet = await db.query.pets.findFirst({
-    where: eq(pets.householdId, member.householdId),
-  });
-  return { userId: user.id, status: "ready" as const, member, household: household!, pet: pet! };
+  const [household, pet] = await Promise.all([
+    db.query.households.findFirst({ where: eq(households.id, member.householdId) }),
+    db.query.pets.findFirst({ where: eq(pets.householdId, member.householdId) }),
+  ]);
+  if (!household || !pet) return { userId: user.id, status: "no-membership" as const };
+  return { userId: user.id, status: "ready" as const, member, household, pet };
 });

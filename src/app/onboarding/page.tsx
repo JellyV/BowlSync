@@ -7,11 +7,10 @@ import { PetTypeSelect } from "@/components/pet-type-select";
 
 async function createAction(formData: FormData) {
   "use server";
-  const householdName = formData.get("householdName") as string;
   const displayName = formData.get("displayName") as string;
   const petName = formData.get("petName") as string;
   const petType = (formData.get("petType") as string) ?? "dog";
-  await createHousehold({ householdName, displayName, petName, petType });
+  await createHousehold({ displayName, petName, petType });
 }
 
 export default async function OnboardingPage() {
@@ -91,29 +90,6 @@ export default async function OnboardingPage() {
 
             <PetTypeSelect />
 
-            <div className="space-y-1">
-              <label
-                htmlFor="create-householdName"
-                className="block text-sm font-medium text-[var(--ink)]"
-              >
-                Household name
-              </label>
-              <input
-                id="create-householdName"
-                name="householdName"
-                type="text"
-                autoComplete="off"
-                required
-                placeholder="e.g. The Smith House"
-                className="
-                  w-full rounded-lg border border-[var(--foreground)]/30 bg-[var(--background)]/60
-                  px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--foreground)]/50
-                  focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent
-                  transition-shadow
-                "
-              />
-            </div>
-
             <button
               type="submit"
               className="
@@ -128,6 +104,15 @@ export default async function OnboardingPage() {
             </button>
           </form>
         </section>
+
+        {/* Either / or */}
+        <div className="flex items-center gap-4" aria-hidden="true">
+          <span className="h-px flex-1 bg-[var(--foreground)]/20" />
+          <span className="text-xs font-medium uppercase tracking-widest text-[var(--foreground)]/60">
+            Or
+          </span>
+          <span className="h-px flex-1 bg-[var(--foreground)]/20" />
+        </div>
 
         {/* Join with a code */}
         <section className="rounded-xl border border-[var(--foreground)]/20 bg-[var(--background)] p-6 space-y-4">
