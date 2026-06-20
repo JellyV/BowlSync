@@ -6,6 +6,7 @@ import { getUserContext } from "@/lib/auth-context";
 import { BowlGauge } from "@/components/bowl-gauge";
 import { RecentList } from "@/components/recent-list";
 import { ClearJustFed } from "@/components/clear-just-fed";
+import { SiteHeader } from "@/components/site-header";
 import { getAnimal } from "@/lib/animals";
 
 interface PageProps {
@@ -37,7 +38,9 @@ export default async function StatusPage({ searchParams }: PageProps) {
   const lastFedByName = rows[0]?.fedByName ?? null;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start gap-10 px-4 py-12 bg-(--background)">
+    <>
+      <SiteHeader />
+      <main className="flex min-h-screen flex-col items-center justify-start gap-10 px-4 py-12 bg-(--background)">
       <header className="w-full max-w-sm">
         <h1 className="text-2xl font-bold font-(family-name:--font-display) text-(--ink) text-center">
           {ctx.pet.name}{getAnimal(ctx.pet.type)?.emoji ? (
@@ -59,6 +62,7 @@ export default async function StatusPage({ searchParams }: PageProps) {
       <ClearJustFed />
 
       <RecentList rows={rows} justFed={justFed} members={members} />
-    </main>
+      </main>
+    </>
   );
 }

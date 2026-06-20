@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BackLink } from "@/components/back-link";
+import { SiteHeader } from "@/components/site-header";
 
 export const metadata = {
   title: "How to set up BowlSync",
@@ -117,8 +117,9 @@ const steps = [
 
 export default function InstructionsPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start px-4 py-12 bg-[var(--background)]">
-      <BackLink href="/" label="Back to home" />
+    <>
+      <SiteHeader />
+      <main className="flex min-h-screen flex-col items-center justify-start px-4 py-12 bg-[var(--background)]">
       <div className="w-full max-w-prose space-y-10">
         {/* Page header */}
         <header className="space-y-2 text-center">
@@ -202,6 +203,7 @@ export default function InstructionsPage() {
           </Link>
         </nav>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
