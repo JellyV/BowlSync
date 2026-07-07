@@ -1,208 +1,286 @@
 import Link from "next/link";
+import { ChevronDown, Nfc, Smartphone } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { WhatIsNfc } from "@/components/what-is-nfc";
 
 export const metadata = {
   title: "How to set up BowlSync",
   description: "A plain-language guide to getting BowlSync running for your household.",
 };
 
-const steps = [
-  {
-    number: 1,
-    heading: "Sign in",
-    body: (
-      <>
-        Go to{" "}
-        <Link
-          href="/login"
-          className="underline underline-offset-2 text-[var(--ink)] hover:opacity-70 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-        >
-          the sign-in page
-        </Link>{" "}
-        and enter your email. We&apos;ll send you a magic link — click it and
-        you&apos;re in. No password required. Google sign-in is also available if
-        you&apos;ve set that up in your Supabase project.
-      </>
-    ),
-  },
-  {
-    number: 2,
-    heading: "Create or join a household",
-    body: (
-      <>
-        First time here? Choose{" "}
-        <strong className="font-semibold text-[var(--ink)]">Start a household</strong>, enter your
-        name, your dog&apos;s name, and a name for the household. You&apos;ll get
-        an invite code to share with anyone else who feeds your dog — they can
-        enter it on the same screen under{" "}
-        <strong className="font-semibold text-[var(--ink)]">Join with a code</strong>. Everyone
-        who joins sees the same shared log.
-      </>
-    ),
-  },
-  {
-    number: 3,
-    heading: "(Optional) Write your /fed URL to an NFC tag",
-    body: (
-      <>
-        <p>
-          Your BowlSync address ends in{" "}
-          <code className="font-mono text-sm bg-[var(--ink)]/8 px-1.5 py-0.5 rounded text-[var(--ink)]">
-            /fed
-          </code>{" "}
-          — for example{" "}
-          <code className="font-mono text-sm bg-[var(--ink)]/8 px-1.5 py-0.5 rounded text-[var(--ink)]">
-            https://bowlsync.app/fed
-          </code>
-          . You can put that URL on a cheap NFC sticker so tapping it with your
-          phone logs a feeding automatically.
-        </p>
-        <p className="mt-3">
-          <strong className="font-semibold text-[var(--ink)]">What is NFC?</strong> It&apos;s the
-          same technology as contactless payment. An NFC sticker is a small passive
-          tag that simply stores a URL — it has no battery and nothing to install.
-          When you tap it, your phone reads the URL and opens it in a browser.
-          That&apos;s all BowlSync needs.
-        </p>
-        <p className="mt-3">
-          To write the tag, download a free app such as{" "}
-          <strong className="font-semibold text-[var(--ink)]">NFC Tools</strong> (available on iOS
-          and Android). Open it, choose{" "}
-          <em>Write</em> → <em>Add a record</em> → <em>URL</em>, paste your{" "}
-          <code className="font-mono text-sm bg-[var(--ink)]/8 px-1.5 py-0.5 rounded text-[var(--ink)]">
-            /fed
-          </code>{" "}
-          address, then tap your phone to a blank NFC sticker. The write takes
-          about a second.
-        </p>
-        <p className="mt-3">
-          NTAG213 and NTAG215 stickers both work — they&apos;re widely available
-          online and inexpensive. You don&apos;t need to know the tag type in
-          advance; NFC Tools handles it automatically.
-        </p>
-      </>
-    ),
-  },
-  {
-    number: 4,
-    heading: "Stick the tag near the bowl",
-    body: (
-      <>
-        Peel off the adhesive backing and stick the tag somewhere close to your
-        dog&apos;s food bowl — the side of a cabinet, the floor nearby, or the
-        edge of a mat all work well. Anywhere your phone can reach without
-        fumbling is a good spot.
-      </>
-    ),
-  },
-  {
-    number: 5,
-    heading: "Tap to feed",
-    body: (
-      <>
-        Hold your phone within an inch or two of the tag. Your phone will open
-        the{" "}
-        <code className="font-mono text-sm bg-[var(--ink)]/8 px-1.5 py-0.5 rounded text-[var(--ink)]">
-          /fed
-        </code>{" "}
-        page and log the feeding automatically. If your dog was already fed in
-        the last 30 minutes, you&apos;ll see a prompt asking you to confirm before
-        anything is recorded — so accidental double-taps are caught before they
-        happen. After logging, you&apos;re taken to the status page where you can
-        see who fed your dog and when.
-      </>
-    ),
-  },
+const FED_URL = "https://bowl-sync.vercel.app/fed";
+
+function CodeChip({ children }: { children: React.ReactNode }) {
+  return (
+    <code className="font-mono text-[13px] bg-(--ink)/8 px-1.5 py-0.5 rounded text-(--ink) break-all">
+      {children}
+    </code>
+  );
+}
+
+/** Numbered vertical steps with dotted connectors between the circles. */
+function Stepper({ steps }: { steps: React.ReactNode[] }) {
+  return (
+    <ol className="mt-1">
+      {steps.map((step, i) => (
+        <li key={i} className="flex gap-3">
+          <div className="flex flex-col items-center">
+            <span
+              aria-hidden="true"
+              className="
+                flex h-6 w-6 shrink-0 items-center justify-center rounded-full
+                bg-(--ink) text-(--background)
+                text-xs font-semibold font-(family-name:--font-display)
+              "
+            >
+              {i + 1}
+            </span>
+            {i < steps.length - 1 && (
+              <span
+                aria-hidden="true"
+                className="my-1 flex-1 border-l-2 border-dotted border-(--foreground)/40"
+              />
+            )}
+          </div>
+          <div
+            className={`pt-0.5 text-sm leading-relaxed text-(--foreground) ${
+              i < steps.length - 1 ? "pb-4" : ""
+            }`}
+          >
+            {step}
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function OsAccordion({
+  label,
+  steps,
+}: {
+  label: string;
+  steps: React.ReactNode[];
+}) {
+  return (
+    <details name="phone-os" className="group border-b border-(--foreground)/15 last:border-b-0">
+      <summary
+        className="
+          flex cursor-pointer list-none items-center justify-between gap-2
+          px-1 py-3 text-sm font-semibold text-(--ink)
+          font-(family-name:--font-display)
+          [&::-webkit-details-marker]:hidden
+          rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)
+        "
+      >
+        {label}
+        <ChevronDown
+          aria-hidden="true"
+          className="h-4 w-4 text-(--foreground) transition-transform group-open:rotate-180"
+        />
+      </summary>
+      <div className="px-1 pb-4">
+        <Stepper steps={steps} />
+      </div>
+    </details>
+  );
+}
+
+const IPHONE_STEPS: React.ReactNode[] = [
+  <>
+    Open the <strong className="font-semibold text-(--ink)">Shortcuts</strong> app.
+    It comes preinstalled on every iPhone.
+  </>,
+  <>
+    Tap the <strong className="font-semibold text-(--ink)">+</strong> button in the
+    top corner.
+  </>,
+  <>
+    Search for &ldquo;url&rdquo; and pick{" "}
+    <strong className="font-semibold text-(--ink)">Open URLs</strong>.
+  </>,
+  <>
+    Type <CodeChip>{FED_URL}</CodeChip> into the action.
+  </>,
+  <>
+    That&apos;s it. Tap the shortcut to log a feeding. You can also add it to your
+    Home Screen like an app, or put a Shortcuts widget on the widget page to the
+    left of your Home Screen.
+  </>,
+];
+
+const ANDROID_STEPS: React.ReactNode[] = [
+  <>
+    Open <CodeChip>{FED_URL}</CodeChip> in Chrome.
+  </>,
+  <>
+    Tap the <strong className="font-semibold text-(--ink)">&#8942;</strong> menu in
+    the top corner.
+  </>,
+  <>
+    Choose <strong className="font-semibold text-(--ink)">Add to Home screen</strong>.
+    The new icon logs a feeding in one tap.
+  </>,
 ];
 
 export default function InstructionsPage() {
   return (
     <>
       <SiteHeader />
-      <main className="flex min-h-screen flex-col items-center justify-start px-4 py-12 bg-[var(--background)]">
-      <div className="w-full max-w-prose space-y-10">
-        {/* Page header */}
-        <header className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold font-[family-name:var(--font-display)] text-[var(--ink)]">
-            How to set up BowlSync
-          </h1>
-          <p className="text-base text-[var(--foreground)] max-w-sm mx-auto">
-            Five steps from sign-in to tap-to-feed. The NFC tag step is optional
-            — you can also log feedings from the app directly.
-          </p>
-        </header>
+      <main className="flex min-h-screen flex-col items-center justify-start px-4 py-12 bg-(--background)">
+        <div className="w-full max-w-2xl space-y-10">
+          {/* Page header */}
+          <header className="space-y-2 text-center">
+            <h1 className="text-3xl font-bold font-(family-name:--font-display) text-(--ink)">
+              How to set up BowlSync
+            </h1>
+            <p className="text-base text-(--foreground) max-w-sm mx-auto">
+              Two steps: sign in, then set up a one-tap shortcut for logging
+              feedings.
+            </p>
+          </header>
 
-        {/* Steps */}
-        <ol className="space-y-8" aria-label="Setup steps">
-          {steps.map((step) => (
-            <li
-              key={step.number}
-              className="flex gap-5 items-start"
+          {/* Step 1 — sign in & household */}
+          <section className="flex gap-5 items-start" aria-label="Step 1: sign in">
+            <span
+              aria-hidden="true"
+              className="
+                flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center
+                bg-(--ink) text-(--background)
+                text-sm font-semibold font-(family-name:--font-display) mt-0.5
+              "
             >
-              {/* Step number bubble */}
-              <span
-                aria-hidden="true"
-                className="
-                  flex-shrink-0 w-9 h-9 rounded-full
-                  flex items-center justify-center
-                  bg-[var(--ink)] text-[var(--background)]
-                  text-sm font-semibold font-[family-name:var(--font-display)]
-                  mt-0.5
-                "
-              >
-                {step.number}
-              </span>
+              1
+            </span>
+            <div className="flex-1 min-w-0 space-y-2">
+              <h2 className="text-base font-semibold font-(family-name:--font-display) text-(--ink) leading-snug">
+                Sign in and set up your household
+              </h2>
+              <div className="rounded-xl border border-(--foreground)/20 p-5 text-sm leading-relaxed text-(--foreground) space-y-3">
+                <p>
+                  Go to{" "}
+                  <Link
+                    href="/login"
+                    className="underline underline-offset-2 text-(--ink) hover:opacity-70 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                  >
+                    the sign-in page
+                  </Link>{" "}
+                  and enter your email. We&apos;ll send you a magic link. Click it
+                  and you&apos;re in. No password needed.
+                </p>
+                <p>
+                  First time here? Choose{" "}
+                  <strong className="font-semibold text-(--ink)">Start a household</strong>{" "}
+                  and enter your name and your pet&apos;s name. Got an invite code
+                  from someone? Enter it under{" "}
+                  <strong className="font-semibold text-(--ink)">Join with a code</strong>{" "}
+                  instead. Everyone in a household sees the same feeding log.
+                </p>
+              </div>
+            </div>
+          </section>
 
-              {/* Step content */}
-              <div className="space-y-1 flex-1 min-w-0">
-                <h2 className="text-base font-semibold font-[family-name:var(--font-display)] text-[var(--ink)] leading-snug">
-                  {step.heading}
-                </h2>
-                <div className="text-sm text-[var(--foreground)] leading-relaxed">
-                  {step.body}
+          {/* Step 2 — shortcut, two approaches */}
+          <section className="flex gap-5 items-start" aria-label="Step 2: set up a shortcut">
+            <span
+              aria-hidden="true"
+              className="
+                flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center
+                bg-(--ink) text-(--background)
+                text-sm font-semibold font-(family-name:--font-display) mt-0.5
+              "
+            >
+              2
+            </span>
+            <div className="flex-1 min-w-0 space-y-2">
+              <h2 className="text-base font-semibold font-(family-name:--font-display) text-(--ink) leading-snug">
+                Set up a shortcut to log feedings
+              </h2>
+              <p className="text-sm text-(--foreground)">Pick either approach.</p>
+
+              <div className="grid gap-4 sm:grid-cols-2 items-start pt-1">
+                {/* Approach 1: phone shortcut */}
+                <div className="rounded-xl border border-(--foreground)/20 p-5">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold font-(family-name:--font-display) text-(--ink)">
+                    <Smartphone className="h-4 w-4 text-(--accent)" aria-hidden="true" />
+                    Phone shortcut
+                  </h3>
+                  <p className="mt-1 mb-2 text-sm leading-relaxed text-(--foreground)">
+                    A one-tap icon on your phone that opens the feeding page.
+                  </p>
+                  <OsAccordion label="iPhone" steps={IPHONE_STEPS} />
+                  <OsAccordion label="Android" steps={ANDROID_STEPS} />
+                </div>
+
+                {/* Approach 2: NFC tag */}
+                <div className="rounded-xl border border-(--foreground)/20 p-5">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="flex items-center gap-2 text-sm font-semibold font-(family-name:--font-display) text-(--ink)">
+                      <Nfc className="h-4 w-4 text-(--accent)" aria-hidden="true" />
+                      NFC tag
+                    </h3>
+                    <WhatIsNfc />
+                  </div>
+                  <div className="mt-2 space-y-3 text-sm leading-relaxed text-(--foreground)">
+                    <p>
+                      A sticker near the bowl. Tap it with your phone and the
+                      feeding is logged. No screen, no app to find.
+                    </p>
+                    <p>
+                      Download the free{" "}
+                      <strong className="font-semibold text-(--ink)">NFC Tools</strong>{" "}
+                      app (iOS and Android). Choose <em>Write</em> &rarr;{" "}
+                      <em>Add a record</em> &rarr; <em>URL</em>, paste{" "}
+                      <CodeChip>{FED_URL}</CodeChip>, then hold your phone to a
+                      blank sticker. The write takes about a second.
+                    </p>
+                    <p>
+                      Stick it somewhere close to your pet&apos;s bowl. The side of
+                      a cabinet, the floor nearby, or the edge of a mat all work
+                      well.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </li>
-          ))}
-        </ol>
+            </div>
+          </section>
 
-        {/* Log without a tag note */}
-        <aside
-          className="rounded-xl border border-[var(--foreground)]/20 bg-[var(--background)] p-5 space-y-2"
-          aria-label="Tip: logging without a tag"
-        >
-          <p className="text-sm font-semibold text-[var(--ink)] font-[family-name:var(--font-display)]">
-            No tag? No problem.
-          </p>
-          <p className="text-sm text-[var(--foreground)] leading-relaxed">
-            You don&apos;t need an NFC tag to use BowlSync. The Bowl Gauge on the
-            home screen has a tap-to-feed button, and you can always visit{" "}
-            <code className="font-mono text-xs bg-[var(--ink)]/8 px-1 py-0.5 rounded text-[var(--ink)]">
-              /fed
-            </code>{" "}
-            directly in your browser. The tag is just a shortcut.
-          </p>
-        </aside>
+          {/* No-shortcut note */}
+          <aside
+            className="rounded-xl border border-(--foreground)/20 p-5 space-y-2"
+            aria-label="Tip: logging without a shortcut"
+          >
+            <p className="text-sm font-semibold text-(--ink) font-(family-name:--font-display)">
+              No shortcut? No problem.
+            </p>
+            <p className="text-sm text-(--foreground) leading-relaxed">
+              The Bowl Gauge on the home screen has a tap-to-feed button, and{" "}
+              <CodeChip>/fed</CodeChip> works from any browser. If your pet
+              already ate in the last 30 minutes, the page asks you to confirm
+              before recording anything, so accidental double-taps don&apos;t
+              count.
+            </p>
+          </aside>
 
-        {/* Footer nav */}
-        <nav
-          className="flex flex-wrap gap-4 justify-center text-sm"
-          aria-label="Page navigation"
-        >
-          <Link
-            href="/"
-            className="underline underline-offset-2 text-[var(--foreground)] hover:text-[var(--ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] transition-colors"
+          {/* Footer nav */}
+          <nav
+            className="flex flex-wrap gap-4 justify-center text-sm"
+            aria-label="Page navigation"
           >
-            Back to status
-          </Link>
-          <Link
-            href="/onboarding"
-            className="underline underline-offset-2 text-[var(--foreground)] hover:text-[var(--ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] transition-colors"
-          >
-            Go to onboarding
-          </Link>
-        </nav>
-      </div>
+            <Link
+              href="/"
+              className="underline underline-offset-2 text-(--foreground) hover:text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) transition-colors"
+            >
+              Back to status
+            </Link>
+            <Link
+              href="/onboarding"
+              className="underline underline-offset-2 text-(--foreground) hover:text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) transition-colors"
+            >
+              Go to onboarding
+            </Link>
+          </nav>
+        </div>
       </main>
     </>
   );
