@@ -5,19 +5,19 @@ One shared answer to "did anyone feed the dog?"
 **[Live app](https://bowl-sync.vercel.app)**
 
 <p align="center">
-  <img src="docs/screenshots/home-mobile.png" alt="BowlSync home screen on a phone: a circular gauge showing the dog was fed 30 minutes ago and by whom, with the household name above and recent feedings below" width="320">
+  <img src="docs/screenshots/home-mobile.png" alt="BowlSync home screen on a phone" width="320">
 </p>
 
 ## Why this exists
 
-My dog Nachoie never turns down a second dinner. If you feed him and someone
-else walks into the kitchen twenty minutes later, he will stare at them like
-he hasn't eaten in days, and they will believe him. For a while our household
-ran on "did you feed him?" texts. Sometimes nobody answered. He either got fed
-twice or waited longer than he should have.
+My roommate and I are raising a puppy named Nacho on work schedules that
+barely overlap. Whoever fed him was usually out the door by the time the
+other got home, so we ran on "did you feed the dog?" texts. Texts get missed
+and answers come late, and more than once Nacho happily ate two dinners
+because neither of us knew the other had already fed him.
 
-BowlSync replaces that group-chat question with a page anyone in the household
-can glance at. It shows when the last feeding happened and who did it. Logging
+BowlSync replaces those texts with a page either of us can glance at any
+time. It shows when the last feeding happened and who did it. Logging
 a new one takes a single tap, and if a feeding was already logged in the past
 30 minutes, the app asks you to confirm before recording another. Most double
 feedings get caught right there.
