@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
@@ -7,6 +8,7 @@ import { BowlGauge } from "@/components/bowl-gauge";
 import { RecentList } from "@/components/recent-list";
 import { ClearJustFed } from "@/components/clear-just-fed";
 import { SiteHeader } from "@/components/site-header";
+import { MemberAvatars } from "@/components/member-avatars";
 import { getAnimal } from "@/lib/animals";
 
 interface PageProps {
@@ -47,9 +49,20 @@ export default async function StatusPage({ searchParams }: PageProps) {
             <span className="emoji ml-2">{getAnimal(ctx.pet.type)!.emoji}</span>
           ) : null}
         </h1>
-        <p className="text-xs text-center text-(--foreground) mt-1 font-mono">
-          {ctx.household.name}
-        </p>
+        <Link
+          href="/household"
+          aria-label={`${ctx.household.name} — members and invites`}
+          className="
+            mt-1.5 flex flex-col items-center gap-2 rounded-lg
+            hover:opacity-75 transition-opacity
+            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)
+          "
+        >
+          <p className="text-sm text-center text-(--foreground) font-mono">
+            {ctx.household.name}
+          </p>
+          <MemberAvatars members={members} withAdd />
+        </Link>
       </header>
 
       <BowlGauge
