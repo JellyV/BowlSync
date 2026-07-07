@@ -89,7 +89,7 @@ export function EditFeedingDialog({
           <ResponsiveDialogTitle className="text-(--ink)">Edit Feeding</ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
 
-        <div className="flex flex-col gap-4 mt-2">
+        <div className="flex flex-col gap-4 mt-2 px-4 pb-4 sm:px-0 sm:pb-0">
           {/* Who fed */}
           <div className="flex flex-col gap-1">
             <label
@@ -122,18 +122,21 @@ export function EditFeedingDialog({
             <span className="text-xs font-semibold font-mono uppercase tracking-wide text-(--foreground)">
               Time
             </span>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {[
                 { label: "Just now", minutes: 0 },
                 { label: "15 min ago", minutes: 15 },
                 { label: "30 min ago", minutes: 30 },
+                { label: "1 hr ago", minutes: 60 },
+                { label: "2 hr ago", minutes: 120 },
+                { label: "3 hr ago", minutes: 180 },
               ].map(({ label, minutes }) => (
                 <button
                   key={minutes}
                   type="button"
                   onClick={() => applyQuickTime(minutes)}
                   className="
-                    flex-1 rounded-lg px-2 py-1.5 text-xs font-medium
+                    rounded-lg px-2 py-1.5 text-xs font-medium
                     bg-(--foreground)/8 text-(--ink)
                     hover:bg-(--accent)/30 transition-colors
                     focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)
