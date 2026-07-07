@@ -5,7 +5,8 @@ import { WhatIsNfc } from "@/components/what-is-nfc";
 
 export const metadata = {
   title: "How to set up BowlSync",
-  description: "A plain-language guide to getting BowlSync running for your household.",
+  description:
+    "A plain-language guide to getting BowlSync running for your household.",
 };
 
 const FED_URL = "https://bowl-sync.vercel.app/fed";
@@ -63,7 +64,10 @@ function OsAccordion({
   steps: React.ReactNode[];
 }) {
   return (
-    <details name="phone-os" className="group border-b border-(--foreground)/15 last:border-b-0">
+    <details
+      name="phone-os"
+      className="group border-b border-(--foreground)/15 last:border-b-0"
+    >
       <summary
         className="
           flex cursor-pointer list-none items-center justify-between gap-2
@@ -88,12 +92,12 @@ function OsAccordion({
 
 const IPHONE_STEPS: React.ReactNode[] = [
   <>
-    Open the <strong className="font-semibold text-(--ink)">Shortcuts</strong> app.
-    It comes preinstalled on every iPhone.
+    Open the <strong className="font-semibold text-(--ink)">Shortcuts</strong>{" "}
+    app. It comes preinstalled on every iPhone.
   </>,
   <>
-    Tap the <strong className="font-semibold text-(--ink)">+</strong> button in the
-    top corner.
+    Tap the <strong className="font-semibold text-(--ink)">+</strong> button in
+    the top corner.
   </>,
   <>
     Search for &ldquo;url&rdquo; and pick{" "}
@@ -103,9 +107,9 @@ const IPHONE_STEPS: React.ReactNode[] = [
     Type <CodeChip>{FED_URL}</CodeChip> into the action.
   </>,
   <>
-    That&apos;s it. Tap the shortcut to log a feeding. You can also add it to your
-    Home Screen like an app, or put a Shortcuts widget on the widget page to the
-    left of your Home Screen.
+    That&apos;s it. Tap the shortcut to log a feeding. You can also add it to
+    your Home Screen like an app, or put a Shortcuts widget on the widget page
+    to the left of your Home Screen.
   </>,
 ];
 
@@ -114,11 +118,12 @@ const ANDROID_STEPS: React.ReactNode[] = [
     Open <CodeChip>{FED_URL}</CodeChip> in Chrome.
   </>,
   <>
-    Tap the <strong className="font-semibold text-(--ink)">&#8942;</strong> menu in
-    the top corner.
+    Tap the <strong className="font-semibold text-(--ink)">&#8942;</strong> menu
+    in the top corner.
   </>,
   <>
-    Choose <strong className="font-semibold text-(--ink)">Add to Home screen</strong>.
+    Choose{" "}
+    <strong className="font-semibold text-(--ink)">Add to Home screen</strong>.
     The new icon logs a feeding in one tap.
   </>,
 ];
@@ -128,7 +133,7 @@ export default function InstructionsPage() {
     <>
       <SiteHeader />
       <main className="flex min-h-screen flex-col items-center justify-start px-4 py-12 bg-(--background)">
-        <div className="w-full max-w-2xl space-y-10">
+        <div className="space-y-10 w-full max-w-2xl">
           {/* Page header */}
           <header className="space-y-2 text-center">
             <h1 className="text-3xl font-bold font-(family-name:--font-display) text-(--ink)">
@@ -141,7 +146,10 @@ export default function InstructionsPage() {
           </header>
 
           {/* Step 1 — sign in & household */}
-          <section className="flex gap-5 items-start" aria-label="Step 1: sign in">
+          <section
+            className="flex items-start gap-5"
+            aria-label="Step 1: sign in"
+          >
             <span
               aria-hidden="true"
               className="
@@ -152,7 +160,7 @@ export default function InstructionsPage() {
             >
               1
             </span>
-            <div className="flex-1 min-w-0 space-y-2">
+            <div className="flex-1 space-y-2 min-w-0">
               <h2 className="text-base font-semibold font-(family-name:--font-display) text-(--ink) leading-snug">
                 Sign in and set up your household
               </h2>
@@ -165,15 +173,19 @@ export default function InstructionsPage() {
                   >
                     the sign-in page
                   </Link>{" "}
-                  and enter your email. We&apos;ll send you a magic link. Click it
-                  and you&apos;re in. No password needed.
+                  and enter your email. We&apos;ll send you a magic link. Click
+                  it and you&apos;re in. No password needed.
                 </p>
                 <p>
                   First time here? Choose{" "}
-                  <strong className="font-semibold text-(--ink)">Start a household</strong>{" "}
-                  and enter your name and your pet&apos;s name. Got an invite code
-                  from someone? Enter it under{" "}
-                  <strong className="font-semibold text-(--ink)">Join with a code</strong>{" "}
+                  <strong className="font-semibold text-(--ink)">
+                    Start a household
+                  </strong>{" "}
+                  and enter your name and your pet&apos;s name. Got an invite
+                  code from someone? Enter it under{" "}
+                  <strong className="font-semibold text-(--ink)">
+                    Join with a code
+                  </strong>{" "}
                   instead. Everyone in a household sees the same feeding log.
                 </p>
               </div>
@@ -181,7 +193,10 @@ export default function InstructionsPage() {
           </section>
 
           {/* Step 2 — shortcut, two approaches */}
-          <section className="flex gap-5 items-start" aria-label="Step 2: set up a shortcut">
+          <section
+            className="flex items-start gap-5"
+            aria-label="Step 2: set up a shortcut"
+          >
             <span
               aria-hidden="true"
               className="
@@ -192,17 +207,22 @@ export default function InstructionsPage() {
             >
               2
             </span>
-            <div className="flex-1 min-w-0 space-y-2">
+            <div className="flex-1 space-y-2 min-w-0">
               <h2 className="text-base font-semibold font-(family-name:--font-display) text-(--ink) leading-snug">
                 Set up a shortcut to log feedings
               </h2>
-              <p className="text-sm text-(--foreground)">Pick either approach.</p>
+              <p className="text-sm text-(--foreground)">
+                Pick either approach.
+              </p>
 
-              <div className="grid gap-4 sm:grid-cols-2 items-start pt-1">
+              <div className="items-start gap-4 grid sm:grid-cols-2 pt-1">
                 {/* Approach 1: phone shortcut */}
                 <div className="rounded-xl border border-(--foreground)/20 p-5">
                   <h3 className="flex items-center gap-2 text-sm font-semibold font-(family-name:--font-display) text-(--ink)">
-                    <Smartphone className="h-4 w-4 text-(--accent)" aria-hidden="true" />
+                    <Smartphone
+                      className="h-4 w-4 text-(--accent)"
+                      aria-hidden="true"
+                    />
                     Phone shortcut
                   </h3>
                   <p className="mt-1 mb-2 text-sm leading-relaxed text-(--foreground)">
@@ -214,9 +234,12 @@ export default function InstructionsPage() {
 
                 {/* Approach 2: NFC tag */}
                 <div className="rounded-xl border border-(--foreground)/20 p-5">
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex justify-between items-center gap-2">
                     <h3 className="flex items-center gap-2 text-sm font-semibold font-(family-name:--font-display) text-(--ink)">
-                      <Nfc className="h-4 w-4 text-(--accent)" aria-hidden="true" />
+                      <Nfc
+                        className="h-4 w-4 text-(--accent)"
+                        aria-hidden="true"
+                      />
                       NFC tag
                     </h3>
                     <WhatIsNfc />
@@ -228,16 +251,18 @@ export default function InstructionsPage() {
                     </p>
                     <p>
                       Download the free{" "}
-                      <strong className="font-semibold text-(--ink)">NFC Tools</strong>{" "}
+                      <strong className="font-semibold text-(--ink)">
+                        NFC Tools
+                      </strong>{" "}
                       app (iOS and Android). Choose <em>Write</em> &rarr;{" "}
                       <em>Add a record</em> &rarr; <em>URL</em>, paste{" "}
                       <CodeChip>{FED_URL}</CodeChip>, then hold your phone to a
-                      blank sticker. The write takes about a second.
+                      blank sticker.
                     </p>
                     <p>
-                      Stick it somewhere close to your pet&apos;s bowl. The side of
-                      a cabinet, the floor nearby, or the edge of a mat all work
-                      well.
+                      Stick it somewhere close to your pet&apos;s bowl. The side
+                      of a cabinet, the floor nearby, or the edge of a mat all
+                      work well.
                     </p>
                   </div>
                 </div>
@@ -264,7 +289,7 @@ export default function InstructionsPage() {
 
           {/* Footer nav */}
           <nav
-            className="flex flex-wrap gap-4 justify-center text-sm"
+            className="flex flex-wrap justify-center gap-4 text-sm"
             aria-label="Page navigation"
           >
             <Link
@@ -272,12 +297,6 @@ export default function InstructionsPage() {
               className="underline underline-offset-2 text-(--foreground) hover:text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) transition-colors"
             >
               Back to status
-            </Link>
-            <Link
-              href="/onboarding"
-              className="underline underline-offset-2 text-(--foreground) hover:text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) transition-colors"
-            >
-              Go to onboarding
             </Link>
           </nav>
         </div>
