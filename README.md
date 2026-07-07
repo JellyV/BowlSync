@@ -2,25 +2,17 @@
 
 One shared answer to "did anyone feed the dog?"
 
-**[Live app](https://bowl-sync.vercel.app)**
+**[Live website - BowlSync](https://bowl-sync.vercel.app)**
 
 <p align="center">
-  <img src="docs/screenshots/home-mobile.png" alt="BowlSync home screen on a phone" width="320">
+  <img src="docs/screenshots/home.png" alt="BowlSync home screen on a phone" width="320">
 </p>
 
 ## Why this exists
 
-My roommate and I are raising a puppy named Nacho on work schedules that
-barely overlap. Whoever fed him was usually out the door by the time the
-other got home, so we ran on "did you feed the dog?" texts. Texts get missed
-and answers come late, and more than once Nacho happily ate two dinners
-because neither of us knew the other had already fed him.
+My roommate and I are raising a puppy named Nacho, and our work schedules barely overlap, so we kept texting each other to check if the dog was fed. Sometimes the answer came late, sometimes it didn't come at all, and more than once Nacho happily ate two dinners because neither of us knew the other had already fed him.
 
-BowlSync replaces those texts with a page either of us can glance at any
-time. It shows when the last feeding happened and who did it. Logging
-a new one takes a single tap, and if a feeding was already logged in the past
-30 minutes, the app asks you to confirm before recording another. Most double
-feedings get caught right there.
+We figured we couldn't be the only household with this problem, so I built BowlSync. It's a page either of us can glance at any time: it shows when the last feeding happened and who did it. Logging a new one takes a single tap, and if a feeding was already logged in the past 30 minutes, the app asks you to confirm before recording another. Most double feedings get caught right there.
 
 ## How you use it
 
@@ -35,15 +27,14 @@ feedings get caught right there.
 - History is filterable by day, week, or a custom range, and any entry can be
   corrected or reassigned after the fact.
 
-## Under the hood
+## Tech stack
 
-Next.js 16 (App Router) with server actions, React 19, TypeScript, and
+Next.js 16 with server actions, React 19, TypeScript, and
 Tailwind CSS v4. Supabase provides magic-link auth and hosted Postgres,
 Drizzle ORM owns the schema and queries, Vitest covers the unit-testable
 logic, and the whole thing deploys on Vercel.
 
-The stack is intentionally small. A feeding tracker's hard problems are auth
-and multi-tenancy, not scale, so those get the attention: Postgres row-level
+The stack is intentionally small.Postgres row-level
 security runs deny-by-default as a backstop, and every server action scopes
 its queries to the signed-in member's household.
 
